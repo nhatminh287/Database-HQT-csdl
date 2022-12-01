@@ -25,3 +25,25 @@ BEGIN TRANSACTION
 		end catch
 		
 go
+
+--Them Chi tiết đơn hàng
+CREATE PROC ThemChiTietDonHang
+	@idmon char(50), @soluong int, @gia int 
+AS
+BEGIN TRANSACTION
+	begin try
+	--
+		declare @idDonHang int
+		set @idDonHang = (select max(DonHangID) from DonHang)
+		insert into ChiTietDonHang(MonID, DonHangID, SoLuong, GiaBan) 
+		values (@idmon, @idDonHang, @soluong, @gia)
+		commit
+		return 1
+	end try
+		begin catch
+			print N'Đã xảy ra lỗi!'
+			rollback transaction
+			return 0
+		end catch
+		
+go
